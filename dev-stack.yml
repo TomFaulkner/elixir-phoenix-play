@@ -1,0 +1,29 @@
+version: "3"
+services:
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    networks:
+      - backend
+
+  phx:
+    image: elixphx
+    ports:
+      - "4000:4000"
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./hello:/usr/src/myapp
+    working_dir: /usr/src/myapp
+    command: sh -c "(mix ecto.create; mix phx.server)"
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  db-data:
